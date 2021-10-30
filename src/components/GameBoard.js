@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import symbolsToSquares from '../services/symbolsToSquares';
 
 const GameBoardContainer = styled.div`
   max-width: 960px;
@@ -11,10 +12,10 @@ const GameSquare = styled.div`
 `;
 
 const GameBoard = ({
-  numSquares = 12,
-  className
+  className,
+  symbols
 }) => {
-  const squares = Array.from(Array(numSquares).keys());
+  const squares = symbolsToSquares(symbols);
 
   return (
     <GameBoardContainer
@@ -22,11 +23,13 @@ const GameBoard = ({
     >
       <div>
         <div className="row align-items-start">
-          {squares.map((i) => (
+          {squares.map((square, i) => (
             <div className="col-3" key={i}>
               <GameSquare
-                className="bg-secondary mb-3"
-              />
+                className="bg-secondary mb-3 d-flex align-items-center justify-content-center text-white"
+              >
+                <i className={square.icon} style={{ fontSize: '2rem' }} />
+              </GameSquare>
             </div>
           ))}
         </div>

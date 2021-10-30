@@ -1,12 +1,14 @@
 import React from 'react';
+import { set1 } from '../constants/symbols';
 import GameBoard from './GameBoard';
-// import styled from 'styled-components';
 
-const Game = ({
-  numSquares = 12
-}) => {
+const Game = ({ className }) => {
   return (
-    <GameBoard numSquares={numSquares} />
+    <GameBoard
+      className={className}
+      numSquares={12}
+      symbols={set1}
+    />
   );
 };
 

@@ -3,7 +3,7 @@ import Game from './Game';
 
 const Slash = () => {
   return (
-    <Game numSquares={16} />
+    <Game />
   );
 };
 

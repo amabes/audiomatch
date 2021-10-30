@@ -11,13 +11,14 @@ const GameSquare = styled.div`
 `;
 
 const GameBoard = ({
-  numSquares = 12
+  numSquares = 12,
+  className
 }) => {
   const squares = Array.from(Array(numSquares).keys());
 
   return (
     <GameBoardContainer
-      className="m-auto px-5 d-flex align-items-center justify-content-center h-100"
+      className={`m-auto px-5 d-flex align-items-center justify-content-center h-100 ${className || ''}`}
     >
       <div>
         <div className="row align-items-start">

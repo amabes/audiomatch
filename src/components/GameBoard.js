@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import symbolsToSquares from '../services/symbolsToSquares';
 
 const GameBoardContainer = styled.div`
-  max-width: 960px;
+  max-width: 760px;
 `;
 
 const GameSquare = styled.div`

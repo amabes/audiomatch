@@ -1,25 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Fragment } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+// import TopNav from '../TopNav';
+import Slash from './components/Slash';
+import { SLASH } from './constants/routes';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Fragment>
+        {/* <TopNav /> */}
+        <div className="container-fluid">
+          <Switch>
+            <Route exact path={SLASH} component={Slash} />
+          </Switch>
+        </div>
+        {/* <Modals /> */}
+        <ToastContainer
+          className="text-center"
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          // pauseOnFocusLoss
+          // draggable
+          // pauseOnHover
+        />
+      </Fragment>
+    </Router>
   );
 }
 

@@ -11,8 +11,13 @@ const GameBoardContainer = styled.div`
 `;
 
 const GameSquare = styled.div`
-  min-height: 80px;
-  min-width: 80px;
+  min-height: 60px;
+  min-width: 60px;
+
+  @media (min-width: 600px) {
+    min-height: 80px;
+    min-width: 80px;
+  }
 `;
 
 const GameBoard = ({

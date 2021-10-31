@@ -1,7 +1,6 @@
 {
   "name": "audiomatch",
   "version": "0.1.0",
-  "private": true,
   "homepage": "https://amabes.github.io/audiomatch",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { HashRouter, Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 // import TopNav from '../TopNav';
 import Slash from './components/Slash';
@@ -8,7 +8,7 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
+    <HashRouter basename='/'>
       <Fragment>
         {/* <TopNav /> */}
         <div className="container-fluid">
@@ -30,7 +30,7 @@ function App() {
           // pauseOnHover
         />
       </Fragment>
-    </Router>
+    </HashRouter>
   );
 }
 

@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import symbolsToSquares from '../services/symbolsToSquares';
+import {
+  isValidSymbolSet,
+  squareColumnClasses,
+  symbolsToSquares
+} from '../services/squares';
 
 const GameBoardContainer = styled.div`
   max-width: 760px;
@@ -15,6 +19,11 @@ const GameBoard = ({
   className,
   symbols
 }) => {
+  // TODO support larger symbol sets than 12
+  if (!isValidSymbolSet(symbols)) {
+    return null;
+  }
+
   const squares = symbolsToSquares(symbols);
 
   return (
@@ -24,7 +33,12 @@ const GameBoard = ({
       <div>
         <div className="row align-items-start">
           {squares.map((square, i) => (
-            <div className="col-3" key={i}>
+            <div
+              data-id={square.id}
+              data-label={square.label}
+              className={squareColumnClasses(symbols)}
+              key={i}
+            >
               <GameSquare
                 className="bg-secondary mb-3 d-flex align-items-center justify-content-center text-white"
               >

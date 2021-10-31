@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 // import TopNav from '../TopNav';
 import Slash from './components/Slash';
 import { SLASH } from './constants/routes';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
 function App() {

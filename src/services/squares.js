@@ -21,9 +21,26 @@ export const serializeSymbolSet = (symbolSet) => {
 
     xCount += 1;
 
+    // yAxis Label
+    // yCount is increased when moving into second row
+    // ex: grid of 16 (gridUnit = 4)
+    let yLabel = '';
+    if (i === 0) {
+      // 0 = A
+      yLabel = alphabetArray[yCount];
+    } else if ((i + 1) === (yCount * gridUnit) + 1) {
+      // 5 = B : yCount (1) * gridUnit (4) + 1
+      // 9 = C : yCount (2) * gridUnit (4) + 1
+      // 13 = D : yCount (3) * gridUnit (4) + 1
+      yLabel = alphabetArray[yCount];
+    }
+    // yAxis Label
+
     const serializedSymbol = {
       ...symbol,
-      id: alphabetArray[yCount] + (xCount).toString()
+      id: alphabetArray[yCount] + xCount.toString(),
+      yLabel,
+      xLabel: (i <= gridUnit - 1) ? i + 1 : ''
     };
 
     if (xCount === gridUnit) {

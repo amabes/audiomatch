@@ -10,9 +10,27 @@ const GameBoardContainer = styled.div`
   max-width: 760px;
 `;
 
+const GameSquareContainer = styled.div`
+  position: relative;
+`;
+
 const GameSquare = styled.div`
   min-height: 60px;
   min-width: 60px;
+
+  &::before {
+    position: absolute;
+    content: "${(props) => props.xLabel}";
+    top: -40px;
+    color: black;
+  }
+
+  &::after {
+    position: absolute;
+    content: "${(props) => props.yLabel}";
+    left: -40px;
+    color: black;
+  }
 
   @media (min-width: 600px) {
     min-height: 80px;
@@ -44,11 +62,15 @@ const GameBoard = ({
               className={squareColumnClasses(symbols)}
               key={i}
             >
-              <GameSquare
-                className="bg-secondary mb-3 d-flex align-items-center justify-content-center text-white"
-              >
-                <i className={square.icon} style={{ fontSize: '2rem' }} />
-              </GameSquare>
+              <GameSquareContainer>
+                <GameSquare
+                  className="game-square bg-secondary mb-3 d-flex align-items-center justify-content-center text-white"
+                  xLabel={square.xLabel}
+                  yLabel={square.yLabel}
+                >
+                  <i className={square.icon} style={{ fontSize: '2rem' }} />
+                </GameSquare>
+              </GameSquareContainer>
             </div>
           ))}
         </div>

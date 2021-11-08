@@ -1,5 +1,16 @@
 export const set1 = [
   {
+    icon: 'fas fa-cat',
+    label: 'Cat'
+  },
+  {
+    icon: 'fas fa-feather',
+    label: 'Feather'
+  }
+];
+
+export const set2 = [
+  {
     icon: 'fas fa-star',
     label: 'Star'
   },
@@ -14,6 +25,25 @@ export const set1 = [
   {
     icon: 'far fa-sun',
     label: 'Sun'
+  }
+];
+
+export const set3 = [
+  {
+    icon: 'fas fa-dog',
+    label: 'Dog'
+  },
+  {
+    icon: 'fas fa-bell',
+    label: 'Bell'
+  },
+  {
+    icon: 'fas fa-cut',
+    label: 'Scissors'
+  },
+  {
+    icon: 'fas fa-bus-alt',
+    label: 'Bus'
   },
   {
     icon: 'fas fa-moon',

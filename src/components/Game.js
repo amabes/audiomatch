@@ -4,7 +4,13 @@ import { isValidSymbolSet, symbolsToSquares } from '../services/squares';
 import GameBoard from './GameBoard';
 
 const Game = ({ className }) => {
-  const roundData = [set1, set2, set3];
+  const roundData = [
+    [...set2, ...set3],
+    set1,
+    set2,
+    [...set1, ...set2],
+    set3
+  ];
   const [squares, setSquares] = useState(null);
   const [symbols, setSymbols] = useState(null);
 

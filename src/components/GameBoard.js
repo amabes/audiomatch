@@ -49,6 +49,7 @@ const GameBoard = ({
   numRounds,
   loadNextRound
 }) => {
+  const [inputMethod, setInputMethod] = useState(null);
   const [currentRound, setCurrentRound] = useState(0);
   const [roundLoaded, setRoundLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -71,7 +72,10 @@ const GameBoard = ({
     setOrderedPair(null);
     setPrevOrderedPair(null);
     setLoading(false);
-    keyboardInput.focus();
+
+    if (inputMethod === 'keyboard') {
+      keyboardInput.focus();
+    }
   };
 
   const selectOrderedPair = (selectedOrderedPair) => {
@@ -120,7 +124,9 @@ const GameBoard = ({
       }
     }
 
-    keyboardInput.value = '';
+    if (inputMethod === 'keyboard') {
+      keyboardInput.value = '';
+    }
   };
 
   const showIcon = (square) => {
@@ -179,6 +185,10 @@ const GameBoard = ({
                   xLabel={square.xLabel}
                   yLabel={square.yLabel}
                   onClick={() => {
+                    if (inputMethod !== 'touch') {
+                      setInputMethod('touch');
+                    }
+
                     if (!loading) {
                       selectOrderedPair(square.id);
                     }
@@ -218,7 +228,9 @@ const GameBoard = ({
               </div> */}
             </div>
             <GameKeyboardInput
-              onSubmit={selectOrderedPair}
+              onSubmit={(inputOrderedPair) => {
+                selectOrderedPair(inputOrderedPair);
+              }}
               loading={loading}
             />
           </div>
@@ -240,6 +252,10 @@ const GameBoard = ({
                   type="button"
                   className="btn btn-primary btn-lg"
                   onClick={() => {
+                    if (inputMethod !== 'keyboard') {
+                      setInputMethod('keyboard');
+                    }
+
                     handleLoadNextRound();
                   }}
                 >

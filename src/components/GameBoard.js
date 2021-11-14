@@ -163,9 +163,19 @@ const GameBoard = ({
   if (!userWonRound && Object.keys(correctOrderedPairs).length === squares.length) {
     setUserWonRound(true);
 
-    if (symbols.length === roundData.length) {
+    const nextRound = (currentRound + 1) + 1;
+    const nextRoundSymbolLength = nextRound * 2;
+
+    if (nextRoundSymbolLength > 12 || nextRoundSymbolLength > roundData.length) {
+      // If the next round symbol length is...
+      // 1. greater than 12, the game is complete
+      // 2. greater than total symbols available, the game is complete
+      //
+      // TODO remove #1 logic once UI exist to inform user that a larger screen
+      // is needed to play higher levels.
       setUserWinsGame(true);
       toast.success('You win!');
+
       return null;
     }
 

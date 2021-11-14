@@ -1,21 +1,17 @@
 import React, { useState } from 'react';
-import { set1, set2, set3 } from '../constants/symbols';
+import { shuffle } from 'lodash';
+import { roundData } from '../constants/symbols';
 import { isValidSymbolSet, symbolsToSquares } from '../services/squares';
 import GameBoard from './GameBoard';
 
 const Game = ({ className }) => {
-  const roundData = [
-    set1,
-    set2,
-    [...set1, ...set2],
-    set3,
-    [...set2, ...set3]
-  ];
   const [squares, setSquares] = useState(null);
   const [symbols, setSymbols] = useState(null);
 
   const loadNextRound = (round = 0) => {
-    const symbolsData = roundData[round];
+    const numSymbols = (round + 1) * 2; // 0=2, 1=4, 2=6, 3=8, etc.
+    const shuffledRoundData = shuffle(roundData);
+    const symbolsData = shuffledRoundData.slice(0, numSymbols);
 
     if (!isValidSymbolSet(symbolsData)) {
       return null;
@@ -30,7 +26,7 @@ const Game = ({ className }) => {
       className={className}
       squares={squares}
       symbols={symbols}
-      numRounds={roundData.length}
+      roundData={roundData}
       loadNextRound={loadNextRound}
     />
   );

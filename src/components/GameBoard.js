@@ -46,21 +46,22 @@ const GameBoard = ({
   squares,
   className,
   symbols,
-  numRounds,
-  loadNextRound
+  loadNextRound,
+  roundData
 }) => {
   const [inputMethod, setInputMethod] = useState(null);
   const [currentRound, setCurrentRound] = useState(0);
   const [roundLoaded, setRoundLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [userWon, setUserWon] = useState(false);
+  const [userWonRound, setUserWonRound] = useState(false);
+  const [userWinsGame, setUserWinsGame] = useState(false);
   const [prevOrderedPair, setPrevOrderedPair] = useState(null);
   const [orderedPair, setOrderedPair] = useState(null);
   const [correctOrderedPairs, setCorrectOrderedPairs] = useState({});
   // TODO support larger symbol sets than 12
 
   useEffect(() => {
-    if (!roundLoaded) {
+    if (!roundLoaded && !userWinsGame) {
       loadNextRound(currentRound);
       setRoundLoaded(true);
     }
@@ -149,7 +150,7 @@ const GameBoard = ({
 
   const handleLoadNextRound = () => {
     const nextRound = currentRound + 1;
-    setUserWon(false);
+    setUserWonRound(false);
     setRoundLoaded(false);
     setCorrectOrderedPairs({});
     setCurrentRound(nextRound);
@@ -158,8 +159,16 @@ const GameBoard = ({
 
   if (!squares || !symbols) return null;
 
-  if (!userWon && Object.keys(correctOrderedPairs).length === squares.length) {
-    setUserWon(true);
+  // User won round & wins game logic
+  if (!userWonRound && Object.keys(correctOrderedPairs).length === squares.length) {
+    setUserWonRound(true);
+
+    if (symbols.length === roundData.length) {
+      setUserWinsGame(true);
+      toast.success('You win!');
+      return null;
+    }
+
     toast.success('Nice job!');
   }
 
@@ -203,7 +212,7 @@ const GameBoard = ({
           ))}
         </div>
 
-        {!userWon && (
+        {!userWonRound && (
           <div
             className="d-flex align-item-center justify-content-center flex-column"
           >
@@ -236,12 +245,12 @@ const GameBoard = ({
           </div>
         )}
 
-        {userWon && (
+        {userWonRound && (
           <div
             className="d-flex align-item-center justify-content-center flex-column"
           >
             <div className="mx-auto mt-3">
-              {!numRounds === (currentRound + 1) ? (
+              {userWinsGame ? (
                 <div>
                   <h4>
                     <i className="fas fa-check-circle text-success" /> You win!

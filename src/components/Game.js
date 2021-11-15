@@ -3,10 +3,12 @@ import { shuffle } from 'lodash';
 import { roundData } from '../constants/symbols';
 import { isValidSymbolSet, symbolsToSquares } from '../services/squares';
 import GameBoard from './GameBoard';
+import TitleScreen from './TitleScreen';
 
 const Game = ({ className }) => {
   const [squares, setSquares] = useState(null);
   const [symbols, setSymbols] = useState(null);
+  const [showTitleScreen, setShowTitleScreen] = useState(true);
 
   const loadNextRound = (round = 0) => {
     const numSymbols = (round + 1) * 2; // 0=2, 1=4, 2=6, 3=8, etc.
@@ -20,6 +22,16 @@ const Game = ({ className }) => {
     setSquares(symbolsToSquares(symbolsData));
     setSymbols(symbolsData);
   };
+
+  if (showTitleScreen) {
+    return (
+      <TitleScreen
+        startGame={() => {
+          setShowTitleScreen(false);
+        }}
+      />
+    );
+  }
 
   return (
     <GameBoard

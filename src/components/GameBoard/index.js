@@ -63,15 +63,17 @@ const GameBoard = ({
   window.AudioMatch.recognition.onerror = (event) => {
     console.log(`recognition (onerror): ${event.error}`);
 
-    if (inputMethod === 'voice' && event?.error === 'no-speech') {
-      toast.error('No speech detected. Click microphone to reactivate.', { autoClose: false });
-      setIsListening(false);
-      window.AudioMatch.recognition.stop();
-      setInputMethod('touch');
-    }
+    if (inputMethod === 'voice') {
+      if (event?.error === 'no-speech') {
+        toast.error('No speech detected. Click microphone to reactivate.', { autoClose: false });
+        setIsListening(false);
+        window.AudioMatch.recognition.stop();
+        setInputMethod('touch');
+      }
 
-    if (inputMethod === 'voice' && event?.error === 'aborted') {
-      startRecognition();
+      if (event?.error === 'aborted' || event?.error === 'network') {
+        startRecognition();
+      }
     }
   };
 

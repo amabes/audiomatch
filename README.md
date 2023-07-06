@@ -1,5 +1,7 @@
 # Audio Match
 
+Visible at https://amabes.github.io/audiomatch
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Scripts:
@@ -22,8 +24,10 @@ Auto-fixes issues.
 yarn run lint:fix
 ```
 
-### Deploy:
-Push to GitHub pages, visible at https://amabes.github.io/audiomatch
+### Deploy to GitHub Pages
+
+Docs: https://github.com/tschaub/gh-pages
+
 ```
 yarn deploy
 ```

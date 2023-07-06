@@ -6,6 +6,8 @@ import { initializeSpeechRecognition } from '../../services/speechRecognition';
 import {
   GameBoardContainer, GameSquare, GameSquareContainer, GameTitle
 } from './styles';
+import GameVoiceInput from '../GameVoiceInput';
+import GameTouchInput from '../GameTouchInput';
 
 // Initialize SpeechRecognition
 // instantiate window.AudioMatch.recognition
@@ -66,6 +68,10 @@ const GameBoard = ({
       setIsListening(false);
       window.AudioMatch.recognition.stop();
       setInputMethod('touch');
+    }
+
+    if (inputMethod === 'voice' && event?.error === 'aborted') {
+      startRecognition();
     }
   };
 
@@ -250,6 +256,33 @@ const GameBoard = ({
     toast.success('Nice job!');
   }
 
+  /**
+   *
+   * @param {string} newInputMethod // touch, keyboard, voice
+   *
+   */
+  const handleInputMethod = (newInputMethod) => {
+    toast.dismiss();
+
+    // Only abort speechRecognition when current inputMethod is voice
+    // And the newly selected (newInputMethod) is NOT voice
+    if (inputMethod === 'voice' && newInputMethod !== 'voice') {
+      abortRecognition();
+    }
+
+    if (inputMethod !== newInputMethod) {
+      setInputMethod(newInputMethod);
+
+      if (newInputMethod === 'voice') {
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(() => {
+          startRecognition();
+        }).catch(() => {
+          initPlayWithVoice();
+        });
+      }
+    }
+  };
+
   console.log('Listening', isListening);
 
   return (
@@ -269,10 +302,11 @@ const GameBoard = ({
               <GameSquareContainer>
                 <GameSquare
                   id={square.id}
+                  inputMethod={inputMethod}
                   data-label={square.label}
                   className={`game-square bg-${correctOrderedPairs[square.id] !== undefined ? 'success' : 'secondary'} mb-3 d-flex align-items-center justify-content-center text-white`}
-                  xLabel={square.xLabel}
-                  yLabel={square.yLabel}
+                  xLabel={inputMethod !== 'touch' ? square.xLabel : ' '}
+                  yLabel={inputMethod !== 'touch' ? square.yLabel : ' '}
                   onClick={() => {
                     if (inputMethod !== 'touch') {
                       setInputMethod('touch');
@@ -305,6 +339,14 @@ const GameBoard = ({
               />
             )}
 
+            {inputMethod === 'voice' && (
+              <GameVoiceInput />
+            )}
+
+            {inputMethod === 'touch' && (
+              <GameTouchInput />
+            )}
+
             <div className="mx-auto mt-3">
               <div
                 className="btn-group border rounded"
@@ -315,12 +357,7 @@ const GameBoard = ({
                   type="button"
                   className={`btn btn-${inputMethod === 'touch' ? 'primary' : 'light'} border-right`}
                   onClick={() => {
-                    if (inputMethod === 'voice') {
-                      abortRecognition();
-                    }
-                    if (inputMethod !== 'touch') {
-                      setInputMethod('touch');
-                    }
+                    handleInputMethod('touch');
                   }}
                 >
                   <i className="fa fa-hand-pointer-o" />
@@ -329,12 +366,7 @@ const GameBoard = ({
                   type="button"
                   className={`btn btn-${inputMethod === 'keyboard' ? 'primary' : 'light'} border-right`}
                   onClick={() => {
-                    if (inputMethod === 'voice') {
-                      abortRecognition();
-                    }
-                    if (inputMethod !== 'keyboard') {
-                      setInputMethod('keyboard');
-                    }
+                    handleInputMethod('keyboard');
                   }}
                 >
                   <i className="fas fa-keyboard" />
@@ -345,15 +377,7 @@ const GameBoard = ({
                     type="button"
                     className={`position-relative btn btn-${inputMethod === 'voice' ? 'primary' : 'light'}`}
                     onClick={() => {
-                      if (inputMethod !== 'voice') {
-                        setInputMethod('voice');
-
-                        navigator.mediaDevices.getUserMedia({ audio: true }).then(() => {
-                          startRecognition();
-                        }).catch(() => {
-                          initPlayWithVoice();
-                        });
-                      }
+                      handleInputMethod('voice');
                     }}
                   >
                     {microphonePermission !== 'denied' ? (

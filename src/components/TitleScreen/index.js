@@ -56,28 +56,29 @@ const TitleScreen = ({ startGame }) => {
           <div className="row mb-3">
             <FlipCard
               icon="fas fa-robot"
-              show={show1}
-              backClassName={gameReady ? 'bg-secondary' : 'bg-success'}
+              show={show3}
+              backClassName={gameReady ? 'bg-success' : 'bg-secondary'}
             />
             <FlipCard
               icon="fas fa-anchor"
-              show={show2}
-              backClassName={gameReady ? 'bg-secondary' : 'bg-success'}
+              show={gameReady ? false : show1}
+              backClassName="bg-secondary"
             />
           </div>
           <div className="row">
             <FlipCard
               icon="fas fa-plane"
-              show={show3}
-              backClassName={gameReady ? 'bg-secondary' : 'bg-success'}
+              show={gameReady ? false : show2}
+              backClassName="bg-secondary"
             />
             <FlipCard
-              icon="fas fa-dragon"
+              icon="fas fa-robot"
               show={show4}
-              backClassName={gameReady ? 'bg-secondary' : 'bg-success'}
+              backClassName={gameReady ? 'bg-success' : 'bg-secondary'}
             />
           </div>
         </div>
+
         <div className="d-flex justify-content-center mt-5">
           <button
             className={`btn btn-lg ${gameReady ? 'btn-primary' : 'btn-light border'}`}

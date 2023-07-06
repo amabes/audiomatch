@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/audiomatch/static/css/main.0c93a67f.chunk.css",
-    "main.js": "/audiomatch/static/js/main.08e75156.chunk.js",
-    "main.js.map": "/audiomatch/static/js/main.08e75156.chunk.js.map",
-    "runtime-main.js": "/audiomatch/static/js/runtime-main.0e34967d.js",
-    "runtime-main.js.map": "/audiomatch/static/js/runtime-main.0e34967d.js.map",
-    "static/css/2.28cf4775.chunk.css": "/audiomatch/static/css/2.28cf4775.chunk.css",
-    "static/js/2.1fc221dc.chunk.js": "/audiomatch/static/js/2.1fc221dc.chunk.js",
-    "static/js/2.1fc221dc.chunk.js.map": "/audiomatch/static/js/2.1fc221dc.chunk.js.map",
-    "static/js/3.afa5b932.chunk.js": "/audiomatch/static/js/3.afa5b932.chunk.js",
-    "static/js/3.afa5b932.chunk.js.map": "/audiomatch/static/js/3.afa5b932.chunk.js.map",
+    "main.js": "/audiomatch/static/js/main.b12a7b77.chunk.js",
+    "main.js.map": "/audiomatch/static/js/main.b12a7b77.chunk.js.map",
+    "runtime-main.js": "/audiomatch/static/js/runtime-main.00a5bf89.js",
+    "runtime-main.js.map": "/audiomatch/static/js/runtime-main.00a5bf89.js.map",
+    "static/css/2.5cfdf52c.chunk.css": "/audiomatch/static/css/2.5cfdf52c.chunk.css",
+    "static/js/2.db2596a6.chunk.js": "/audiomatch/static/js/2.db2596a6.chunk.js",
+    "static/js/2.db2596a6.chunk.js.map": "/audiomatch/static/js/2.db2596a6.chunk.js.map",
+    "static/js/3.a8ee0a9d.chunk.js": "/audiomatch/static/js/3.a8ee0a9d.chunk.js",
+    "static/js/3.a8ee0a9d.chunk.js.map": "/audiomatch/static/js/3.a8ee0a9d.chunk.js.map",
     "index.html": "/audiomatch/index.html",
-    "static/css/2.28cf4775.chunk.css.map": "/audiomatch/static/css/2.28cf4775.chunk.css.map",
+    "static/css/2.5cfdf52c.chunk.css.map": "/audiomatch/static/css/2.5cfdf52c.chunk.css.map",
     "static/css/main.0c93a67f.chunk.css.map": "/audiomatch/static/css/main.0c93a67f.chunk.css.map",
-    "static/js/2.1fc221dc.chunk.js.LICENSE.txt": "/audiomatch/static/js/2.1fc221dc.chunk.js.LICENSE.txt"
+    "static/js/2.db2596a6.chunk.js.LICENSE.txt": "/audiomatch/static/js/2.db2596a6.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.0e34967d.js",
-    "static/css/2.28cf4775.chunk.css",
-    "static/js/2.1fc221dc.chunk.js",
+    "static/js/runtime-main.00a5bf89.js",
+    "static/css/2.5cfdf52c.chunk.css",
+    "static/js/2.db2596a6.chunk.js",
     "static/css/main.0c93a67f.chunk.css",
-    "static/js/main.08e75156.chunk.js"
+    "static/js/main.b12a7b77.chunk.js"
   ]
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { squareColumnClasses } from '../../services/squares';
 import GameKeyboardInput from '../GameKeyboardInput';
-import { initializeSpeechRecognition } from '../../utils/speechRecognition';
+import { initializeSpeechRecognition } from '../../services/speechRecognition';
 import {
   GameBoardContainer, GameSquare, GameSquareContainer, GameTitle
 } from './styles';
@@ -73,7 +73,6 @@ const GameBoard = ({
     setTimeout(() => {
       try {
         window.AudioMatch.recognition.start();
-        window.AudioMatch.isListening = true;
         setIsListening(true);
         console.log('recognition (start) success');
       } catch (error) {
@@ -84,7 +83,6 @@ const GameBoard = ({
 
   const abortRecognition = () => {
     window.AudioMatch.recognition.abort();
-    window.AudioMatch.isListening = false;
     setIsListening(false);
     console.log('recognition (abort)');
   };

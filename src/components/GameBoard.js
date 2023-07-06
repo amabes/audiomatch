@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { squareColumnClasses } from '../services/squares';
 import GameKeyboardInput from './GameKeyboardInput';
+import { initializeSpeechRecognition } from '../utils/speechRecognition';
 
 const GameTitle = styled.h1`
   font-family: 'Orbitron', sans-serif;
@@ -42,6 +43,10 @@ const GameSquare = styled.div`
   }
 `;
 
+// Initialize SpeechRecognition
+// instantiate window.AudioMatch.recognition
+initializeSpeechRecognition();
+
 const GameBoard = ({
   squares,
   className,
@@ -49,7 +54,7 @@ const GameBoard = ({
   loadNextRound,
   roundData
 }) => {
-  const [inputMethod, setInputMethod] = useState(null);
+  const [inputMethod, setInputMethod] = useState('touch');
   const [currentRound, setCurrentRound] = useState(0);
   const [roundLoaded, setRoundLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -58,7 +63,67 @@ const GameBoard = ({
   const [prevOrderedPair, setPrevOrderedPair] = useState(null);
   const [orderedPair, setOrderedPair] = useState(null);
   const [correctOrderedPairs, setCorrectOrderedPairs] = useState({});
+  const [microphonePermission, setMicrophonePermission] = useState('');
+  const [isListening, setIsListening] = useState(false);
+
+  useEffect(() => {
+    navigator.permissions.query({ name: 'microphone' }).then((res) => {
+      // @state {string} granted, denied, prompt
+      setMicrophonePermission(res.state);
+    });
+  }, []);
+
   // TODO support larger symbol sets than 12
+
+  const canPlayWithVoice = useMemo(() => {
+    return window.webkitSpeechRecognition && window.webkitSpeechGrammarList;
+  }, [window.webkitSpeechRecognition, window.webkitSpeechGrammarList]);
+
+  window.AudioMatch.recognition.onstart = () => {
+    console.log('recognition (onstart)');
+    setIsListening(true);
+  };
+
+  window.AudioMatch.recognition.onresult = (event) => {
+    // https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognitionEvent
+    const letter = event.results[0][0].transcript;
+
+    console.log('recognition (onresult) : transcript', letter);
+    console.log('recognition (onresult) : confidence', event.results[0][0].confidence);
+
+    selectOrderedPair(letter);
+  };
+
+  window.AudioMatch.recognition.onerror = (event) => {
+    console.log(`recognition (onerror): ${event.error}`);
+
+    if (inputMethod === 'voice' && event?.error === 'no-speech') {
+      toast.error('No speech detected. Click microphone to reactivate.', { autoClose: false });
+      setIsListening(false);
+      window.AudioMatch.recognition.stop();
+      setInputMethod('touch');
+    }
+  };
+
+  const startRecognition = () => {
+    setTimeout(() => {
+      try {
+        window.AudioMatch.recognition.start();
+        window.AudioMatch.isListening = true;
+        setIsListening(true);
+        console.log('recognition (start) success');
+      } catch (error) {
+        console.log('recognition (error)', error);
+      }
+    }, 400);
+  };
+
+  const abortRecognition = () => {
+    window.AudioMatch.recognition.abort();
+    window.AudioMatch.isListening = false;
+    setIsListening(false);
+    console.log('recognition (abort)');
+  };
 
   useEffect(() => {
     if (!roundLoaded && !userWinsGame) {
@@ -67,6 +132,18 @@ const GameBoard = ({
     }
   }, [squares, symbols]);
 
+  const initPlayWithVoice = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      console.log('getUserMedia (success)', stream);
+      setMicrophonePermission(true);
+    } catch (error) {
+      console.log('getUserMedia (error)', error);
+      setMicrophonePermission(false);
+      setInputMethod('touch');
+    }
+  };
+
   const resetForNextSelection = () => {
     const keyboardInput = document.getElementById('keyboardInput');
 
@@ -74,7 +151,12 @@ const GameBoard = ({
     setPrevOrderedPair(null);
     setLoading(false);
 
-    if (inputMethod === 'keyboard') {
+    console.log('resetForNextSelection');
+    if (inputMethod === 'voice') {
+      startRecognition();
+    }
+
+    if (keyboardInput && inputMethod === 'keyboard') {
       keyboardInput.focus();
     }
   };
@@ -86,8 +168,20 @@ const GameBoard = ({
 
     toast.dismiss();
 
+    if (inputMethod === 'voice') {
+      abortRecognition();
+    }
+
     if (!square) {
       toast.error('Guess ordered pairs within the grid.');
+
+      if (inputMethod === 'keyboard') {
+        keyboardInput.value = '';
+      }
+
+      if (inputMethod === 'voice') {
+        startRecognition();
+      }
 
       return false;
     }
@@ -103,8 +197,7 @@ const GameBoard = ({
     // 0 = Ordered Pair, ex: A2
     // 1 = Label, ex: Fish
     if (orderedPair) {
-      // Check if labels are the same
-      // and if ordered pairs are different
+      // Check if labels are the same and if ordered pairs are different
       setLoading(true);
 
       if (orderedPair[1] === label && orderedPair[0] !== sop) {
@@ -115,17 +208,26 @@ const GameBoard = ({
         };
 
         setCorrectOrderedPairs(cop);
-        // TODO function?
-        resetForNextSelection();
+
+        // Starting speech recognition again after aborting requires waiting at least 400ms
+        setTimeout(() => {
+          resetForNextSelection();
+        }, 400);
       } else {
         toast.error('Try again');
+        // Delay reset to allow the user to see the choices they made;
+        // Starting speech recognition again after aborting requires waiting at least 400ms
         setTimeout(() => {
           resetForNextSelection();
         }, 1500);
       }
     }
 
-    if (inputMethod === 'keyboard') {
+    if (!orderedPair && inputMethod === 'voice') {
+      startRecognition();
+    }
+
+    if (keyboardInput && inputMethod === 'keyboard') {
       keyboardInput.value = '';
     }
   };
@@ -155,6 +257,10 @@ const GameBoard = ({
     setCorrectOrderedPairs({});
     setCurrentRound(nextRound);
     loadNextRound(nextRound);
+
+    if (inputMethod === 'voice') {
+      startRecognition();
+    }
   };
 
   if (!squares || !symbols) return null;
@@ -181,6 +287,8 @@ const GameBoard = ({
 
     toast.success('Nice job!');
   }
+
+  console.log('Listening', isListening);
 
   return (
     <GameBoardContainer
@@ -226,32 +334,75 @@ const GameBoard = ({
           <div
             className="d-flex align-item-center justify-content-center flex-column"
           >
+            {inputMethod === 'keyboard' && (
+              <GameKeyboardInput
+                onSubmit={(inputOrderedPair) => {
+                  selectOrderedPair(inputOrderedPair);
+                }}
+                loading={loading}
+              />
+            )}
+
             <div className="mx-auto mt-3">
-              {/* <div
+              <div
                 className="btn-group border rounded"
                 role="group"
                 aria-label="Basic example"
               >
                 <button
                   type="button"
-                  className="btn btn-light border-right"
+                  className={`btn btn-${inputMethod === 'touch' ? 'primary' : 'light'} border-right`}
+                  onClick={() => {
+                    if (inputMethod === 'voice') {
+                      abortRecognition();
+                    }
+                    if (inputMethod !== 'touch') {
+                      setInputMethod('touch');
+                    }
+                  }}
                 >
-                  <i className="fas fa-keyboard" />
+                  <i className="fa fa-hand-pointer-o" />
                 </button>
                 <button
                   type="button"
-                  className="btn btn-light"
+                  className={`btn btn-${inputMethod === 'keyboard' ? 'primary' : 'light'} border-right`}
+                  onClick={() => {
+                    if (inputMethod === 'voice') {
+                      abortRecognition();
+                    }
+                    if (inputMethod !== 'keyboard') {
+                      setInputMethod('keyboard');
+                    }
+                  }}
                 >
-                  <i className="fas fa-microphone" />
+                  <i className="fas fa-keyboard" />
                 </button>
-              </div> */}
+
+                {canPlayWithVoice && (
+                  <button
+                    type="button"
+                    className={`position-relative btn btn-${inputMethod === 'voice' ? 'primary' : 'light'}`}
+                    onClick={() => {
+                      if (inputMethod !== 'voice') {
+                        setInputMethod('voice');
+
+                        navigator.mediaDevices.getUserMedia({ audio: true }).then(() => {
+                          startRecognition();
+                        }).catch(() => {
+                          initPlayWithVoice();
+                        });
+                      }
+                    }}
+                  >
+                    {microphonePermission !== 'denied' ? (
+                      <i className="fas fa-microphone" />
+                    ) : (
+                      <i className="fa fa-microphone-slash text-muted" />
+                    )}
+                  </button>
+                )}
+              </div>
             </div>
-            <GameKeyboardInput
-              onSubmit={(inputOrderedPair) => {
-                selectOrderedPair(inputOrderedPair);
-              }}
-              loading={loading}
-            />
           </div>
         )}
 
@@ -271,10 +422,6 @@ const GameBoard = ({
                   type="button"
                   className="btn btn-primary btn-lg"
                   onClick={() => {
-                    if (inputMethod !== 'keyboard') {
-                      setInputMethod('keyboard');
-                    }
-
                     handleLoadNextRound();
                   }}
                 >

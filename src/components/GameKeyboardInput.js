@@ -6,30 +6,29 @@ const GameKeyboardInput = ({
 }) => {
   const handleCheckOrderedPair = (e) => {
     e.preventDefault();
-    const { inputOrderedPair } = e.currentTarget;
+    const { value } = e.currentTarget;
 
-    onSubmit(inputOrderedPair.value);
+    if (value !== '' && value.length === 2) {
+      onSubmit(value);
+    }
   };
 
   return (
     <div className="m-auto">
-      <form
-        onSubmit={handleCheckOrderedPair}
-      >
-        <input
-          id="keyboardInput"
-          name="inputOrderedPair"
-          type="text"
-          maxLength="2"
-          minLength="2"
-          className="text-capitalize form-control-lg"
-          autoFocus
-          disabled={loading}
-        />
-        <div className="text-muted text-center small">
-          Enter ordered pair, ex: A2
-        </div>
-      </form>
+      <input
+        id="keyboardInput"
+        name="inputOrderedPair"
+        type="text"
+        maxLength="2"
+        minLength="2"
+        className="text-capitalize form-control-lg"
+        autoFocus
+        disabled={loading}
+        onKeyUp={handleCheckOrderedPair}
+      />
+      <div className="text-muted text-center small">
+        Enter ordered pair, ex: A2
+      </div>
     </div>
   );
 };

@@ -5,7 +5,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Scripts:
 
 ### Local Development:
-Visible at [http://localhost:3000](http://localhost:3000).
+Visible at [http://localhost:4000](http://localhost:4000).
 
 ```
 yarn start
